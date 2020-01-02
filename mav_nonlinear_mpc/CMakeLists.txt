@@ -28,8 +28,16 @@ else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEIGEN_STACK_ALLOCATION_LIMIT=0")
+
 find_package(Eigen REQUIRED)
 include_directories(${Eigen_INCLUDE_DIRS})
+
+include_directories(
+# include
+  ${catkin_INCLUDE_DIRS}
+)
+
 
 #############
 # LIBRARIES #
@@ -72,6 +80,16 @@ target_link_libraries(nonlinear_mpc_node mav_nonlinear_mpc_lib)
 
 add_dependencies(nonlinear_mpc_node ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
+
+cs_add_executable(weights_mpc
+  src/weights_mpc.cpp
+)
+
+target_link_libraries(weights_mpc ${lapacke_LIBRARIES})
+
+target_link_libraries(weights_mpc mav_nonlinear_mpc_lib)
+
+add_dependencies(weights_mpc ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 ##########
 # EXPORT #
